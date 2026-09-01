@@ -2,8 +2,39 @@
 <html lang="en">
 	<head>
 		<title>Play</title>
+		<script>
+			let input_answer = null;
+			let answers = null;
+			function get_input_answer(){
+				if (input_answer == null) {
+					input_answer = document.getElementById("input-answer");
+				}
+				return input_answer;
+			}
+			function accept_answer() {
+				let input = get_input_answer();
+				add_answer(input.value);
+				input.value = "";
+			}
+			function add_answer(answer) {
+				if (answers == null) {
+					answers = document.getElementById("answers");
+				}
+				const answerElement = document.createElement("p");
+				answerElement.textContent = answer;
+				answers.appendChild(answerElement);
+			}
+		</script>
 	</head>
 	<body>
-		<p>Hello</p>
+		<div id="answers">
+		</div>
+		<div>
+			Question
+		</div>
+		<div>
+			<input id="input-answer" type="text" value="" placeholder="Please write what you think happened.">
+			<button onclick="accept_answer()">=&gt;</button>
+		</div>
 	</body>
 </html>
