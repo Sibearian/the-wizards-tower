@@ -2,39 +2,136 @@
 <html lang="en">
 	<head>
 		<title>Play</title>
-		<script>
-			let input_answer = null;
-			let answers = null;
-			function get_input_answer(){
-				if (input_answer == null) {
-					input_answer = document.getElementById("input-answer");
-				}
-				return input_answer;
-			}
-			function accept_answer() {
-				let input = get_input_answer();
-				add_answer(input.value);
-				input.value = "";
-			}
-			function add_answer(answer) {
-				if (answers == null) {
-					answers = document.getElementById("answers");
-				}
-				const answerElement = document.createElement("p");
-				answerElement.textContent = answer;
-				answers.appendChild(answerElement);
-			}
-		</script>
+		<meta http-equiv="content-type" content="text/html; charset=utf-8" />
 	</head>
 	<body>
 		<div id="answers">
 		</div>
 		<div>
-			Question
+			<p>Question: <span id="question"></span></p>
 		</div>
 		<div>
-			<input id="input-answer" type="text" value="" placeholder="Please write what you think happened.">
+			<input id="input-answer" type="text" value="" placeholder="Please write what you think happened." autofocus>
 			<button onclick="accept_answer()">=&gt;</button>
 		</div>
+		<script>
+			let questions = {
+				"HA": "There is something you’ve kept from the wizard, but shared with one of the other apprentices. What is it?",
+				"H2": "What have you left incomplete because of the wizard’s disappearance?",
+				"H3": "What promise did the wizard make to you to convince you to become an apprentice? Did the wizard keep it?",
+				"H4": "Why can you never forgive the wizard?",
+				"H5": "You find some of the wizard’s writings about you. Why do they disappoint you?",
+				"H6": "For a brief moment, you had the opportunity to ruin the wizard. Why didn’t you take it?",
+				"H7": "What secret do you keep from the wizard? Why would it devastate you if the wizard discovered it?",
+				"H8": "What secret does the wizard, and only the wizard, know about you?",
+				"H9": "What is it about magic that once made you certain you were never destined for it? How did the wizard prove you wrong?",
+				"H10": "Only once has the wizard ever frightened you. When was it?",
+				"HJ": "The wizard saw potential in you that you never would have thought to look for yourself. How did the wizard make sure you knew it?",
+				"HQ": "What reason did the wizard give for taking on apprentices? How do you know it was a lie?",
+				"HK": "The wizard entrusted a certain duty to you, and only you. What was it?",
+
+				"CA": "What do you most regret finding as you’ve searched the tower?",
+				"C2": "You find something in the tower that you know would devastate one of the other apprentices. Do you show it to them?",
+				"C3": "The wizard’s private library is vast and dense. Which book do you destroy?",
+				"C4": "You spend days translating runes carved into the walls of the tower’s basement. Why does what you find scare you?",
+				"C5": "When did the wizard give you praise you did not deserve?",
+				"C6": "When was the last time you left the tower?",
+				"C7": "What was the last thing you spoke with the wizard about before the wizard disappeared?",
+				"C8": "You had another mentor before the wizard. How did the wizard win your loyalty?",
+				"C9": "Only once have you ever angered the wizard. What did you do?",
+				"C10": "The nearby townspeople have a terrible rumor about the wizard. What small nugget of truth does it contain?",
+				"CJ": "Who was most afraid when the wizard chose you as an apprentice?",
+				"CQ": "Who did you have to leave behind to go to the wizard’s tower? Did they ask you to stay?",
+				"CK": "Why did you decide to stay here after the wizard’s disappearance?",
+
+				"DA": "You betrayed the wizard’s trust once. How?",
+				"D2": "What struggle do you have now that makes you miss the wizard’s guidance?",
+				"D3": "Why is part of you relieved by the wizard’s disappearance?",
+				"D4": "The tower’s magic is older than the wizard’s. How does it influence you?",
+				"D5": "What is the most wonderful spell the wizard taught you?",
+				"D6": "You once greeted a stranger at the door of the tower. What did they want? Did the wizard turn them away?",
+				"D7": "Now that the wizard is gone, how have the lives of the people in the nearest town changed for the worse?",
+				"D8": "Now that the wizard is gone, how have the lives of the people in the nearest town changed for the better?",
+				"D9": "Once, a fellow apprentice, brought on near the same time as you, left the tower in the night. Why do you suspect they fled?",
+				"D10": "What did the wizard save you from?",
+				"DJ": "When did the wizard show mercy?",
+				"DQ": "What do you feel was your greatest accomplishment as an apprentice? How did the wizard devalue it at the time?",
+				"DK": "What spell did you desperately want to learn, but the wizard refused to teach it?",
+
+				"SA": "The wizard returns. Do you stay?",
+				"S2": "There is a remnant of the wizard’s old life hidden in the tower. What is it?",
+				"S3": "As you search through the tower, what are you afraid you might find?",
+				"S4": "The wizard was not this tower’s first inhabitant. What do you find that proves it?",
+				"S5": "In the wizard’s study, you find records of a spell that can perform miracles, but at a terrible cost. Do you think the wizard paid it?",
+				"S6": "One room is protected by a magic sigil so strong that even in the wizard’s absence you cannot get through. What do you suspect is in there?",
+				"S7": "You find an artifact hidden away in the tower. Who does it truly belong to?",
+				"S8": "The wizard took something from you. Now that you have access to the whole tower, where do you find it?",
+				"S9": "You think you may know what has become of the wizard. Why won’t you tell the other apprentices?",
+				"S10": "There was a book in the wizard’s private study containing a terrible spell. Did the wizard cast it? Will you?",
+				"SJ": "A magic sigil kept a certain room locked. Which apprentice helped you break it? What did you take from that room?",
+				"SQ": "The wizard forbade you from entering all sorts of parts of the tower. After the wizard’s disappearance, which one did you investigate first?",
+				"SK": "The wizard forbade you from entering all sorts of parts of the tower. Which of the wizard’s spaces do you still refuse to enter, even now?",
+				};
+			var questionIndex = 0;
+			var gameEnded = false;
+
+			function accept_answer() {
+				let input = document.getElementById("input-answer");
+				add_answer(input.value);
+				input.value = "";
+				input.focus();
+			}
+			function add_answer(answer) {
+				const answers = document.getElementById("answers");
+
+				const divElement = document.createElement("div");
+
+				const answerElement = document.createElement("p");
+				answerElement.textContent = answer;
+				const questionElement = document.createElement("p");
+				questionElement.textContent = questions[shuffled_cards[questionIndex]];
+
+				divElement.appendChild(questionElement);
+				divElement.appendChild(answerElement);
+
+				answers.appendChild(divElement);
+
+				ask_next_question();
+			}
+			function shuffle_cards() {
+				const cards = Object.keys(questions);
+				let currentIndex = cards.length;
+				while (currentIndex != 0) {
+					let randomIndex = Math.floor(Math.random() * currentIndex);
+
+					currentIndex--;
+
+					[cards[currentIndex], cards[randomIndex]] = [
+						cards[randomIndex], cards[currentIndex]
+					];
+				}
+
+				return cards;
+			}
+			function set_question() {
+				const questionElement = document.getElementById("question");
+				const question = shuffled_cards[questionIndex];
+				questionElement.textContent = questions[question];
+				if (question === "SA" || gameEnded) {
+					alert(questions[question]);
+					gameEnded = true;
+					return;
+				}
+			}
+			function ask_next_question() {
+				if (!gameEnded)
+					questionIndex += 1;
+				set_question();
+			}
+
+			const shuffled_cards = shuffle_cards();
+			console.log(shuffled_cards);
+			set_question();
+		</script>
 	</body>
 </html>
