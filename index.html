@@ -3,6 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="manifest" href="/src/manifest.json" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>the-wizards-tower</title>
   </head>
@@ -12,11 +13,49 @@
       <p>Descended from the queen</p>
     </hgroup>
     <div>
+      <div>
+	      <p>Players</p>
+	      <button onclick="add_player()">Add Player</button>
+	      <div id="players">
+	      </div>
+      </div>
       <a href="/play/" target="_self"><button type="button">Play!</button></a>
     </div>
     <footer>
       <p>A storytelling game by Courtney Gurll</p>
       <p>Please support the original creator at: <a href="https://sunflowercourt.itch.io/the-wizards-tower" target="_blank">The Wizard's Tower</a>
     </footer>
+    <script>
+	    const playersElement = document.getElementById("players");
+	    let playerIndex = 0;
+
+	    function add_player() {
+		    if (playerIndex > 51) {
+			    alert("Cannot add more players");
+			    return;
+		    }
+		    playerIndex++;
+		    const playerElement = document.createElement("div");
+		    playerElement.id = `player-${playerIndex}`
+
+
+		    const playerInputElement = document.createElement("input");
+		    playerInputElement.placeholder = `Please enter player #${playerIndex}`
+		    playerInputElement.id = `player-input-${playerIndex}`
+
+		    const deletePlayerElement = document.createElement("button");
+		    deletePlayerElement.textContent = "X"
+		    deletePlayerElement.onclick = () => del_player(playerElement.id)
+
+		    playerElement.appendChild(playerInputElement);
+		    playerElement.appendChild(deletePlayerElement);
+
+		    playersElement.appendChild(playerElement);
+	    }
+
+	    function del_player(player_id) {
+		    console.log(`Hello: ${player_id}`)
+	    }
+    </script>
   </body>
 </html>
