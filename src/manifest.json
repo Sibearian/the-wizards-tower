@@ -1,0 +1,15 @@
+{
+	"name": "The wizard's tower",
+	"short_name": "TWT",
+	"description": "A website to play <The Wizard's Tower> A storytelling game by Courtney Gurll.",
+	"icons": [
+		{
+			"src": "/public/wizard.png",
+			"type": "image/png",
+			"sizes": "512x512"
+		}
+	],
+	"start_url": "/",
+	"display": "standalone",
+	"prefer_related_applications": false
+}
