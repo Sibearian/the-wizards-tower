@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<title>Play</title>
+		<link rel="icon" type="image/png" href="/wizard.png" />
+		<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+		<link rel="manifest" href="/src/manifest.json" />
+	</head>
+	<body>
+		<div id="history">
+		</div>
+		<div>
+			<p>Question: <span id="question"></span></p>
+		</div>
+		<div>
+			<input id="input-answer" type="text" value="" placeholder="Please write what you think happened." autofocus>
+			<button id="next-question">=&gt;</button>
+		</div>
+		<script type="module">
+			import GameLoop from "/src/main.js"
+
+			const Loop = new GameLoop(document.getElementById("question"), document.getElementById("input-answer"), document.getElementById("history"))
+			document.getElementById("next-question").addEventListener('click', (e) => {
+				Loop.next()
+			})
+		</script>
+	</body>
+</html>
